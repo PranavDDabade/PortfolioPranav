@@ -1,7 +1,9 @@
 # 🚀 Pranav Dabade - Portfolio Website
 
 A modern, responsive portfolio website built to showcase my projects, skills, and journey as a developer. Designed with a clean UI, smooth interactions, and a focus on user experience.
-
+<p align="center">
+  <img src="./public/opengraph.jpg" alt="Portfolio Preview" width="900"/>
+</p>
 ---
 
 ## 🌐 Live Preview
