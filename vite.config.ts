@@ -8,7 +8,7 @@ export default defineConfig({
 
   plugins: [
     react(),
-    tailwindcss(),
+    tailwindcss(), // ✅ REQUIRED for Tailwind v4
   ],
 
   resolve: {
@@ -18,7 +18,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: "dist",   // ✅ REQUIRED for Vercel
+    outDir: "dist",
     emptyOutDir: true,
   },
 });
