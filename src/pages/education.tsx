@@ -102,7 +102,7 @@ export default function Education() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-5xl md:text-7xl font-display font-medium tracking-tighter leading-[0.95] mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-medium tracking-tighter leading-[0.95] mb-6"
           >
             Education &<br />
             <span className="text-gradient">academic foundation.</span>

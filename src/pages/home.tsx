@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Github, Twitter, Linkedin, Mail, Code2, Layers, Cpu, Globe, Zap, ArrowRight, ExternalLink, Send, Check, Loader2, Download } from "lucide-react";
+import { ArrowUpRight, Github, Twitter, Linkedin, Mail, Code2, Layers, Cpu, Globe, Zap, ArrowRight, ExternalLink, Send, Check, Loader2, Download, Menu, X } from "lucide-react";
 import { Link } from "wouter";
 import { SpotlightCard } from "@/components/SpotlightCard";
 
@@ -80,6 +80,116 @@ function MagneticButton({ children, className, ...props }: any) {
   );
 }
 
+function MobileNav() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const toggle = () => setIsOpen((prev) => !prev);
+    document.addEventListener('toggle-mobile-nav', toggle);
+    return () => document.removeEventListener('toggle-mobile-nav', toggle);
+  }, []);
+
+  // Lock body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 md:hidden"
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-background/95 backdrop-blur-xl"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Close button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground transition-colors z-10"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Nav links */}
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="relative z-10 flex flex-col items-center justify-center h-full gap-8"
+          >
+            {navItems.map((item, i) => (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.15 + i * 0.07 }}
+              >
+                {item.external ? (
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="text-2xl font-display font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                ) : (
+                  <a
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(false);
+                      const el = document.querySelector(item.href);
+                      if (el) {
+                        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 300);
+                      }
+                    }}
+                    className="text-2xl font-display font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                )}
+              </motion.div>
+            ))}
+
+            {/* Social links in mobile nav */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="flex items-center gap-4 mt-8 pt-8 border-t border-border/40"
+            >
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Github className="w-5 h-5" />
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href="mailto:pranavddabade@gmail.com" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Mail className="w-5 h-5" />
+              </a>
+            </motion.div>
+          </motion.nav>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function Home() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -113,7 +223,8 @@ export default function Home() {
       <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }}></div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-40 px-16 py-3 backdrop-blur-md bg-background/60 border-b border-border/20">
+      <MobileNav />
+      <nav className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 md:px-8 lg:px-16 py-3 backdrop-blur-md bg-background/60 border-b border-border/20">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -123,6 +234,7 @@ export default function Home() {
             <NavLogo />
           </motion.div>
           
+          {/* Desktop nav */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -158,11 +270,20 @@ export default function Home() {
               ),
             )}
           </motion.div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => document.dispatchEvent(new CustomEvent('toggle-mobile-nav'))}
+            aria-label="Open menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen max-h-screen flex items-center justify-center pt-15 overflow-hidden">
+      <section className="relative min-h-screen lg:h-screen lg:max-h-screen flex items-center justify-center pt-20 lg:pt-15 pb-12 lg:pb-0 overflow-hidden">
         {/* Abstract background */}
         <motion.div 
           style={{ y, opacity }}
@@ -177,24 +298,24 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent z-10" />
         </motion.div>
 
-        <div className="max-w-7xl mx-auto px-16  relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
             <div className="lg:col-span-7">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-3 mb-8"
+                className="flex items-center gap-3 mb-4 md:mb-8"
               >
                 <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
-                <span className="text-sm font-medium tracking-wider uppercase text-primary">Open to internship opportunities</span>
+                <span className="text-xs sm:text-sm font-medium tracking-wider uppercase text-primary">Open to internship opportunities</span>
               </motion.div>
 
               <motion.h1 
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-5xl md:text-7xl lg:text-7xl font-display font-medium tracking-tighter leading-[0.9] mb-8"
+                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter leading-[0.9] mb-6 md:mb-8"
               >
                 Building with <br />
                 <span className="text-muted-foreground">the MERN stack.</span>
@@ -204,7 +325,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-12 font-light"
+                className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-8 md:mb-12 font-light"
               >
                 I'm Pranav, a Computer Science & Business Systems undergrad crafting scalable, user-focused web applications with MongoDB, Express, React, and Node.
               </motion.p>
@@ -213,7 +334,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-6"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
               >
                 <MagneticButton
                   className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
@@ -242,7 +363,7 @@ export default function Home() {
               transition={{ duration: 1.4, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-5 relative flex justify-center    lg:justify-end items-end"
             >
-              <div className="relative w-full max-w-[440px] aspect-[3/4]">
+              <div className="relative w-full max-w-[260px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-[440px] mx-auto lg:mx-0 aspect-[3/4]">
                 {/* Glow halo behind */}
                 <div className="absolute inset-0 -z-10">
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[80%] rounded-full bg-primary/30 blur-[100px]"></div>
@@ -290,7 +411,7 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={{ scale: 1.08 }}
-                  className="absolute bottom-20 right-0 w-[88px] h-[88px] flex items-center justify-center group cursor-pointer z-20"
+                  className="absolute bottom-12 sm:bottom-20 right-0 w-[64px] h-[64px] sm:w-[88px] sm:h-[88px] flex items-center justify-center group cursor-pointer z-20"
                   aria-label="Download Resume"
                 >
                   {/* Spinning text ring */}
@@ -298,7 +419,7 @@ export default function Home() {
                     width="88"
                     height="88"
                     viewBox="0 0 88 88"
-                    className="absolute inset-0"
+                    className="absolute inset-0 w-full h-full"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
                   >
@@ -338,7 +459,7 @@ export default function Home() {
       </section>
 
       {/* Selected Work */}
-      <section id="work" className="py-32 px-16 relative z-20 bg-background">
+      <section id="work" className="py-16 md:py-32 px-4 sm:px-6 md:px-8 lg:px-16 relative z-20 bg-background">
         <div className="max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
@@ -347,7 +468,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-end justify-between mb-20 border-b border-border/50 pb-8"
           >
-            <h2 className="text-4xl md:text-6xl font-display font-medium tracking-tight">Selected Work</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-medium tracking-tight">Selected Work</h2>
             <span className="text-muted-foreground font-mono text-sm hidden md:block">(01 — 01)</span>
           </motion.div>
 
@@ -428,7 +549,7 @@ export default function Home() {
       </section>
 
       {/* Expertise */}
-      <section id="expertise" className="py-32 px-16 bg-card relative z-20 border-y border-border/50">
+      <section id="expertise" className="py-16 md:py-32 px-4 sm:px-6 md:px-8 lg:px-16 bg-card relative z-20 border-y border-border/50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <motion.div 
@@ -438,7 +559,7 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-1"
             >
-              <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight mb-6">Skills & Expertise</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium tracking-tight mb-6">Skills & Expertise</h2>
               <p className="text-muted-foreground leading-relaxed font-light">
                 A toolkit centered on the MERN stack and modern web development, backed by a strong foundation in computer science fundamentals and a curiosity for building scalable, user-focused products.
               </p>
@@ -474,7 +595,7 @@ export default function Home() {
       </section>
 
       {/* Experience */}
-      <section id="experience" className="py-32 px-16 relative z-20">
+      <section id="experience" className="py-16 md:py-32 px-4 sm:px-6 md:px-8 lg:px-16 relative z-20">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
@@ -483,7 +604,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="mb-20 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight mb-4">Experience</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium tracking-tight mb-4">Experience</h2>
             <p className="text-muted-foreground font-light">Internships and roles where I've shipped real software.</p>
           </motion.div>
 
@@ -540,7 +661,7 @@ export default function Home() {
       </section>
 
       {/* CTA / Contact */}
-      <section id="contact" className="py-32 px-16 relative z-20 bg-primary/5 border-t border-primary/10 overflow-hidden">
+      <section id="contact" className="py-16 md:py-32 px-4 sm:px-6 md:px-8 lg:px-16 relative z-20 bg-primary/5 border-t border-primary/10 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -551,7 +672,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl md:text-7xl font-display font-medium tracking-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-medium tracking-tight mb-6">
               Let's build something <br/>
               <span className="text-gradient">extraordinary.</span>
             </h2>
@@ -573,7 +694,7 @@ export default function Home() {
                 <div className="text-xs font-mono uppercase tracking-widest text-primary mb-3">Reach me at</div>
                 <a
                   href="mailto:pranavddabade@gmail.com"
-                  className="text-2xl md:text-3xl font-display font-medium hover:text-primary transition-colors inline-flex items-center gap-3 group"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-display font-medium hover:text-primary transition-colors inline-flex items-center gap-3 group break-all sm:break-normal"
                 >
                   pranavddabade@gmail.com
                   <ArrowUpRight className="w-6 h-6 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
