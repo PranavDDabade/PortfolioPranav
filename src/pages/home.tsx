@@ -405,7 +405,7 @@ export default function Home() {
 
                 {/* Circular resume download button */}
                 <motion.a
-                  href="../public/PranavResume.pdf"
+                  href="/PranavResume.pdf"
                   download="Pranav_Dabade_Resume.pdf"
                   initial={{ opacity: 0, scale: 0.6 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -647,7 +647,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-12 flex justify-center"
+            className="mt-12 flex justify-center bg-secondary"
           >
             <Link
               href="/education"
