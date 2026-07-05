@@ -413,7 +413,7 @@ export default function Home() {
 
                 {/* Circular resume download button */}
                 <motion.a
-                  href="/PranavResume.pdf"
+                  href="/RESUME.pdf"
                   download="Pranav_Dabade_Resume.pdf"
                   initial={{ opacity: 0, scale: 0.6 }}
                   animate={{ opacity: 1, scale: 1 }}
