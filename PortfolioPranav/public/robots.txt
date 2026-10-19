@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://portfolio-pranav-alpha.vercel.app/sitemap.xml

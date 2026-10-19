@@ -3,10 +3,12 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { ArrowUpRight, Github, Linkedin, Mail, Code2, Layers, Cpu, Globe, Zap, ExternalLink, Send, Check, Loader2, Download, Menu, X } from "lucide-react";
 import { Link } from "wouter";
 import { SpotlightCard } from "@/components/SpotlightCard";
+import emailjs from "@emailjs/browser";
 
 import { NavLogo } from "@/components/NavLogo";
 
 const navItems = [
+  { name: "About", href: "#about", external: false },
   { name: "Work", href: "#work", external: false },
   { name: "Expertise", href: "#expertise", external: false },
   { name: "Experience", href: "#experience", external: false },
@@ -18,40 +20,54 @@ const projects = [
   {
     title: "CloudVault",
     category: "Full-Stack · Cloud Engineering",
+    altText: "CloudVault dashboard showing file upload interface and storage analytics",
     description: "A full-stack cloud file sharing application built with React.js, Node.js, Express.js, MongoDB Atlas, and AWS S3. CloudVault provides secure authentication, cloud storage, file management, and shareable links through a responsive, modern interface optimized for performance and scalability.",
     image: "/images/project-cloudvault.png",
     tech: ["React.js", "Node.js", "Express.js", "MongoDB Atlas", "AWS S3", "JWT", "Tailwind CSS", "Framer Motion", "Nodemailer", "REST API", "Git", "GitHub", "Vercel", "Render"],
-    link: "https://cloudvault-1-9w0z.onrender.com/"
+    bullets: [
+      "Secure file sharing with JWT authentication, email verification, password reset and role-based access.",
+      "RESTful APIs for file upload, download, preview and sharing, with storage on AWS S3.",
+      "Responsive dashboard with real-time storage analytics."
+    ],
+    live: "https://cloudvault-1-9w0z.onrender.com/",
+    github: "" // TODO: paste your CloudVault GitHub repo URL here (the button stays hidden until you do)
   },
   {
     title: "HeartInsights",
     category: "Full-Stack · Machine Learning",
+    altText: "HeartInsights heart disease prediction form with clinical input fields and risk result display",
     description: "A heart disease prediction system that uses machine learning to assess cardiovascular risk from user health data. Delivers real-time results through a clean, interactive interface built on the MERN stack.",
     image: "/images/project-1.png",
-    tech: ["React.js", "Node.js", "MongoDB", "Machine Learning", "Bootstrap"],
-    link: "https://github.com/PranavDDabade/heartinsights"
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Python", "Flask", "scikit-learn", "Machine Learning", "Bootstrap"],
+    bullets: [
+      "Predicts heart disease risk from clinical inputs using a scikit-learn model served through a Flask API.",
+      "Single and bulk (CSV) prediction with downloadable PDF reports.",
+      "JWT login; React (Vite) front end with a Node/Express backend and MongoDB Atlas."
+    ],
+    live: "https://heartinsights.vercel.app",
+    github: "https://github.com/PranavDDabade/heartinsights"
   }
 ];
 
 const skills = [
-  { name: "MERN Stack Development", description: "MongoDB, Express.js, React.js, Node.js", icon: <Globe className="w-5 h-5" /> },
-  { name: "Frontend Engineering", description: "HTML, CSS, JavaScript, React.js, Tailwind CSS, Bootstrap", icon: <Layers className="w-5 h-5" /> },
-  { name: "Programming Languages", description: "C++, Java, Python, JavaScript", icon: <Code2 className="w-5 h-5" /> },
-  { name: "Databases & Tools", description: "MySQL, MongoDB, Firebase, Git, GitHub, Postman, VS Code", icon: <Cpu className="w-5 h-5" /> },
-  { name: "Core Concepts", description: "OOP, Data Structures & Algorithms, DBMS, Operating Systems", icon: <Zap className="w-5 h-5" /> },
-  { name: "Mobile Development", description: "Android Development, Android Studio", icon: <Cpu className="w-5 h-5" /> }
+  { name: "Programming Languages", description: "JavaScript, Java, Python, C++, SQL", icon: <Code2 className="w-5 h-5" /> },
+  { name: "Frontend Engineering", description: "React.js, HTML5, CSS3, Bootstrap, Tailwind CSS, Responsive Design", icon: <Layers className="w-5 h-5" /> },
+  { name: "Backend & APIs", description: "Node.js, Express.js, RESTful APIs, JWT Authentication and Authorization, API Integration", icon: <Globe className="w-5 h-5" /> },
+  { name: "Databases", description: "MongoDB (Atlas), MySQL, Firebase", icon: <Cpu className="w-5 h-5" /> },
+  { name: "Tools & Cloud", description: "Git, GitHub, Postman, AWS S3, Android Studio", icon: <Cpu className="w-5 h-5" /> },
+  { name: "Core Concepts", description: "Data Structures & Algorithms (DSA), OOP, DBMS, Operating Systems, Cyber Security Fundamentals", icon: <Zap className="w-5 h-5" /> }
 ];
 
 const experiences = [
   {
     role: "MERN Stack Intern",
-    company: "Soft Nexis Technology · Online",
+    company: "Soft Nexis Technology (Remote)",
     period: "Feb 2026 — Apr 2026",
     description: "Built and shipped full-stack web applications using MongoDB, Express.js, React.js, and Node.js. Worked with Tailwind CSS for modern UI and used Git & GitHub for version control across collaborative projects."
   },
   {
     role: "Android Developer Intern",
-    company: "Onestar Software Solution · Offline",
+    company: "Onestar Software Solution (On-site)",
     period: "Jun 2023 — Jul 2023",
     description: "Designed and developed native Android applications using Android Studio. Focused on intuitive UI design, layout responsiveness, and core Android development practices."
   }
@@ -97,6 +113,12 @@ function MobileNav() {
     return () => document.removeEventListener('toggle-mobile-nav', toggle);
   }, []);
 
+  // Keep aria-expanded on the hamburger button in sync with isOpen
+  useEffect(() => {
+    const btn = document.getElementById('mobile-menu-btn');
+    if (btn) btn.setAttribute('aria-expanded', String(isOpen));
+  }, [isOpen]);
+
   // Lock body scroll when open
   useEffect(() => {
     if (isOpen) {
@@ -111,6 +133,7 @@ function MobileNav() {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          id="mobile-nav-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -181,14 +204,14 @@ function MobileNav() {
               transition={{ duration: 0.4, delay: 0.5 }}
               className="flex items-center gap-4 mt-8 pt-8 border-t border-border/40"
             >
-              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                <Github className="w-5 h-5" />
+              <a href="https://github.com/PranavDDabade" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Github aria-hidden="true" className="w-5 h-5" />
               </a>
-              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                <Linkedin className="w-5 h-5" />
+              <a href="https://www.linkedin.com/in/pranav-dabade" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Linkedin aria-hidden="true" className="w-5 h-5" />
               </a>
-              <a href="mailto:pranavddabade@gmail.com" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                <Mail className="w-5 h-5" />
+              <a href="mailto:pranavddabade@gmail.com" aria-label="Send email" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                <Mail aria-hidden="true" className="w-5 h-5" />
               </a>
             </motion.div>
           </motion.nav>
@@ -281,6 +304,9 @@ export default function Home() {
 
           {/* Mobile hamburger */}
           <button
+            id="mobile-menu-btn"
+            aria-expanded="false"
+            aria-controls="mobile-nav-overlay"
             className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
             onClick={() => document.dispatchEvent(new CustomEvent('toggle-mobile-nav'))}
             aria-label="Open menu"
@@ -289,6 +315,8 @@ export default function Home() {
           </button>
         </div>
       </nav>
+
+      <main id="main-content">
 
       {/* Hero Section */}
       <section className="relative min-h-screen lg:h-screen lg:max-h-screen flex items-center justify-center pt-20 lg:pt-15 pb-12 lg:pb-0 overflow-hidden">
@@ -300,7 +328,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px] z-10" />
           <img 
             src="/images/hero-bg.png" 
-            alt="Abstract Background" 
+            alt=""
+            role="presentation"
             className="w-full h-full object-cover object-center opacity-40"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent z-10" />
@@ -325,8 +354,8 @@ export default function Home() {
                 transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-medium tracking-tighter leading-[0.9] mb-6 md:mb-8"
               >
-                Building with <br />
-                <span className="text-muted-foreground">the MERN stack.</span>
+                Pranav Dabade<br />
+                <span className="block mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal tracking-normal leading-snug text-primary">MERN Stack Developer | Full Stack Developer</span>
               </motion.h1>
 
               <motion.p 
@@ -335,7 +364,7 @@ export default function Home() {
                 transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-8 md:mb-12 font-light"
               >
-                I'm Pranav, a Computer Science & Business Systems undergrad crafting scalable, user-focused web applications with MongoDB, Express, React, and Node.
+                I build secure, scalable web applications with React.js, Node.js, Express.js, MongoDB and AWS S3.
               </motion.p>
 
               <motion.div
@@ -348,17 +377,23 @@ export default function Home() {
                   className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
                   onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  View Work <ArrowDownIcon className="w-4 h-4" />
+                  View Projects <ArrowDownIcon className="w-4 h-4" />
                 </MagneticButton>
+                <a
+                  href="#contact"
+                  className="px-8 py-4 rounded-full font-medium border border-border/60 text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                >
+                  Contact
+                </a>
                 <div className="flex items-center gap-4">
-                  <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                    <Github className="w-5 h-5" />
+                  <a href="https://github.com/PranavDDabade" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                    <Github aria-hidden="true" className="w-5 h-5" />
                   </a>
-                  <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                    <Linkedin className="w-5 h-5" />
+                  <a href="https://www.linkedin.com/in/pranav-dabade" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                    <Linkedin aria-hidden="true" className="w-5 h-5" />
                   </a>
-                  <a href="mailto:pranavddabade@gmail.com" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
-                    <Mail className="w-5 h-5" />
+                  <a href="mailto:pranavddabade@gmail.com" aria-label="Send email" className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all">
+                    <Mail aria-hidden="true" className="w-5 h-5" />
                   </a>
                 </div>
               </motion.div>
@@ -413,7 +448,7 @@ export default function Home() {
 
                 {/* Circular resume download button */}
                 <motion.a
-                  href="/RESUME.pdf"
+                  href="/Pranav_Dabade_Resume.pdf"
                   download="Pranav_Dabade_Resume.pdf"
                   initial={{ opacity: 0, scale: 0.6 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -466,6 +501,23 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* About */}
+      <section id="about" className="py-16 md:py-24 px-4 sm:px-6 md:px-8 lg:px-16 relative z-20 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium tracking-tight mb-6">About</h2>
+            <p className="text-muted-foreground leading-relaxed text-lg font-light">
+              MERN Stack Developer with hands-on experience building secure, cloud-integrated web applications using React.js, Node.js, Express.js, MongoDB and AWS S3. Built CloudVault, a file-sharing platform with JWT authentication and role-based access, and HeartInsights, an ML-based heart-risk predictor. Strong in Data Structures &amp; Algorithms (DSA), OOP and DBMS; NPTEL Elite-certified in Cyber Security and Privacy (IIT Madras).
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Selected Work */}
       <section id="work" className="py-16 md:py-32 px-4 sm:px-6 md:px-8 lg:px-16 relative z-20 bg-background">
         <div className="max-w-7xl mx-auto">
@@ -498,7 +550,8 @@ export default function Home() {
                   >
                     <img
                       src={project.image}
-                      alt={project.title}
+                      alt={project.altText}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-all duration-700 group-hover:saturate-150 group-hover:contrast-110"
                     />
                     {/* Color sweep on hover */}
@@ -524,9 +577,18 @@ export default function Home() {
                   <h3 className="text-3xl md:text-4xl font-display font-medium mb-6 group-hover:text-primary transition-colors duration-500">
                     {project.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed mb-8 text-lg font-light">
+                  <p className="text-muted-foreground leading-relaxed mb-6 text-lg font-light">
                     {project.description}
                   </p>
+
+                  <ul className="space-y-2 mb-8 text-muted-foreground font-light leading-relaxed">
+                    {project.bullets.map((b) => (
+                      <li key={b} className="flex gap-3">
+                        <span className="mt-2.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0"></span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
 
                   <div className="flex flex-wrap gap-2 mb-10">
                     {project.tech.map((tech, i) => (
@@ -542,13 +604,28 @@ export default function Home() {
                     ))}
                   </div>
 
-                  <a href={project.link} className="group/link inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors w-fit relative">
-                    <span className="relative">
-                      View Project
-                      <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary group-hover/link:w-full transition-all duration-300"></span>
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
-                  </a>
+                  <div className="flex flex-wrap items-center gap-6">
+                    {[
+                      { label: "Live Demo", href: project.live },
+                      { label: "GitHub", href: project.github },
+                    ]
+                      .filter((l) => l.href)
+                      .map((l) => (
+                        <a
+                          key={l.label}
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/link inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors w-fit relative"
+                        >
+                          <span className="relative">
+                            {l.label}
+                            <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary group-hover/link:w-full transition-all duration-300"></span>
+                          </span>
+                          <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
+                        </a>
+                      ))}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -713,20 +790,21 @@ export default function Home() {
                 <div className="text-xs font-mono uppercase tracking-widest text-primary mb-4">Find me on</div>
                 <div className="flex flex-wrap items-center gap-3">
                   {[
-                    { label: "Gmail", href: "mailto:pranavddabade@gmail.com", Icon: Mail },
-                    { label: "LinkedIn", href: "https://www.linkedin.com/", Icon: Linkedin },
-                    { label: "GitHub", href: "https://github.com/", Icon: Github },
-                  ].map(({ label, href, Icon }) => (
+                    { label: "Gmail", href: "mailto:pranavddabade@gmail.com", Icon: Mail, ariaLabel: "Send email" },
+                    { label: "LinkedIn", href: "https://www.linkedin.com/in/pranav-dabade", Icon: Linkedin, ariaLabel: "LinkedIn profile" },
+                    { label: "GitHub", href: "https://github.com/PranavDDabade", Icon: Github, ariaLabel: "GitHub profile" },
+                  ].map(({ label, href, Icon, ariaLabel }) => (
                     <motion.a
                       key={label}
                       href={href}
+                      aria-label={ariaLabel}
                       target={href.startsWith("http") ? "_blank" : undefined}
                       rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
                       whileHover={{ y: -3 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       className="glass-panel inline-flex items-center gap-3 px-5 py-3 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon aria-hidden="true" className="w-4 h-4" />
                       {label}
                     </motion.a>
                   ))}
@@ -755,14 +833,16 @@ export default function Home() {
         </div>
       </section>
 
+      </main>
+
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-border/50 text-center relative z-20 bg-background text-muted-foreground text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div>© {new Date().getFullYear()} Pranav Dabade. All rights reserved.</div>
           <div className="flex gap-6">
             <a href="mailto:pranavddabade@gmail.com" className="hover:text-foreground transition-colors">Email</a>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
-            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a>
+            <a href="https://github.com/PranavDDabade" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/in/pranav-dabade" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a>
           </div>
         </div>
       </footer>
@@ -774,31 +854,57 @@ export default function Home() {
 
 function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [feedback, setFeedback] = useState("");
+  const [website, setWebsite] = useState("");
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (status === "success" || status === "error") {
+      setStatus("idle");
+      setFeedback("");
+    }
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status === "submitting") return;
+
+    // A hidden honeypot field catches basic automated form submissions.
+    if (website) {
+      setStatus("error");
+      setFeedback("Unable to send your message. Please try again.");
+      return;
+    }
+
+    const { VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, VITE_EMAILJS_PUBLIC_KEY } = import.meta.env;
+    if (!VITE_EMAILJS_SERVICE_ID || !VITE_EMAILJS_TEMPLATE_ID || !VITE_EMAILJS_PUBLIC_KEY) {
+      setStatus("error");
+      setFeedback("The contact form is temporarily unavailable. Please email me directly.");
+      console.error("EmailJS contact form is missing one or more required VITE_EMAILJS settings.");
+      return;
+    }
+
     setStatus("submitting");
-
-    // Simulated submission, then open the user's email client as a fallback
-    await new Promise((r) => setTimeout(r, 900));
-
-    const subject = encodeURIComponent(`New message from ${formData.name || "your portfolio"}`);
-    const body = encodeURIComponent(
-      `${formData.message}\n\n— ${formData.name}${formData.email ? `\n${formData.email}` : ""}`,
-    );
-    window.location.href = `mailto:pranavddabade@gmail.com?subject=${subject}&body=${body}`;
-
-    setStatus("success");
-    setTimeout(() => {
-      setStatus("idle");
+    setFeedback("");
+    try {
+      await emailjs.send(
+        VITE_EMAILJS_SERVICE_ID,
+        VITE_EMAILJS_TEMPLATE_ID,
+        { name: formData.name, email: formData.email, message: formData.message },
+        { publicKey: VITE_EMAILJS_PUBLIC_KEY },
+      );
       setFormData({ name: "", email: "", message: "" });
-    }, 2400);
+      setStatus("success");
+      setFeedback("Message sent successfully!");
+    } catch (error) {
+      const diagnostic = error && typeof error === "object" && "status" in error
+        ? { status: error.status }
+        : { type: error instanceof Error ? error.name : typeof error };
+      console.error("EmailJS contact form send failed.", diagnostic);
+      setStatus("error");
+      setFeedback("We couldn't send your message. Please try again in a moment.");
+    }
   };
 
   return (
@@ -807,6 +913,19 @@ function ContactForm() {
       className="glass-panel rounded-2xl p-6 md:p-8 space-y-5 backdrop-blur-md relative overflow-hidden"
     >
       <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+
+      <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
+        <label htmlFor="website">Leave this field empty</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative">
         <div className="space-y-2">
@@ -818,6 +937,7 @@ function ContactForm() {
             name="name"
             type="text"
             required
+            maxLength={100}
             value={formData.name}
             onChange={onChange}
             placeholder="Your name"
@@ -833,6 +953,7 @@ function ContactForm() {
             name="email"
             type="email"
             required
+            maxLength={254}
             value={formData.email}
             onChange={onChange}
             placeholder="you@domain.com"
@@ -850,6 +971,7 @@ function ContactForm() {
           name="message"
           required
           rows={5}
+          maxLength={5000}
           value={formData.message}
           onChange={onChange}
           placeholder="Tell me about your project, timeline, and what you're hoping to build..."
@@ -859,13 +981,13 @@ function ContactForm() {
 
       <div className="flex items-center justify-between gap-4 pt-2 relative">
         <p className="text-xs text-muted-foreground">
-          Or email directly — I read every message.
+          Or email directly - I read every message.
         </p>
         <motion.button
           type="submit"
           disabled={status === "submitting"}
-          whileHover={{ scale: status === "idle" ? 1.03 : 1 }}
-          whileTap={{ scale: status === "idle" ? 0.98 : 1 }}
+          whileHover={{ scale: status !== "submitting" ? 1.03 : 1 }}
+          whileTap={{ scale: status !== "submitting" ? 0.98 : 1 }}
           className="bg-primary text-primary-foreground px-6 py-3 rounded-full font-medium text-sm inline-flex items-center gap-2 disabled:opacity-70 hover:bg-primary/90 transition-colors shadow-[0_0_30px_rgba(139,92,246,0.25)]"
         >
           <AnimatePresence mode="wait">
@@ -882,7 +1004,7 @@ function ContactForm() {
             )}
             {status === "success" && (
               <motion.span
-                key="success"
+                key={status}
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
@@ -891,9 +1013,9 @@ function ContactForm() {
                 <Check className="w-4 h-4" /> Sent
               </motion.span>
             )}
-            {status === "idle" && (
+            {(status === "idle" || status === "error") && (
               <motion.span
-                key="idle"
+                key={status}
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
@@ -905,10 +1027,26 @@ function ContactForm() {
           </AnimatePresence>
         </motion.button>
       </div>
+
+      <AnimatePresence>
+        {(status === "success" || status === "error") && (
+          <motion.p
+            key={status}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.4 }}
+            role={status === "error" ? "alert" : "status"}
+            aria-live="polite"
+            className={`text-xs text-right relative ${status === "error" ? "text-destructive" : "text-muted-foreground"}`}
+          >
+            {feedback}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </form>
   );
 }
-
 function ArrowDownIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg 

@@ -10,16 +10,18 @@ import {
   Calendar,
   MapPin,
   TrendingUp,
+  ShieldCheck,
+  BadgeCheck,
 } from "lucide-react";
 import { SpotlightCard } from "@/components/SpotlightCard";
 
 const education = [
   {
-    degree: "B.Tech, Computer Science & Business Systems",
-    institution: "KIT College of Engineering and Technology",
+    degree: "B.Tech in Computer Science and Business Systems",
+    institution: "KIT College of Engineering, Kolhapur",
     affiliation: "Affiliated to Shivaji University, Kolhapur (SUK)",
-    period: "2024 — 2025",
-    score: "SGPA 7.7",
+    period: "2024 — 2027", // TODO: confirm end year if different
+    score: "CGPA 7.9", // TODO: confirm current SGPA if updated
     location: "Kolhapur, India",
     description:
       "Pursuing an undergraduate degree blending core computer science with business systems. My academic focus combines software engineering principles with applied product thinking.",
@@ -35,10 +37,10 @@ const education = [
     accent: "from-primary/30 to-violet-400/10",
   },
   {
-    degree: "Diploma in Computer Science & Engineering",
-    institution: "Sharad Institute of Technology",
+    degree: "Diploma in Computer Science and Engineering",
+    institution: "Sharad Institute of Technology,Polytechnic, Ichalkaranji",
     affiliation: "Maharashtra State Board of Technical Education (MSBTE)",
-    period: "Completed 2024",
+    period: "2021 — 2024",
     score: "85.94%",
     location: "Ichalkaranji, India",
     description:
@@ -53,6 +55,54 @@ const education = [
     ],
     icon: <Award className="w-6 h-6" />,
     accent: "from-cyan-400/20 to-primary/20",
+  },
+  {
+    degree: "SSC (Secondary School Certificate)",
+    institution: "Swa. Savarkar Pratishthan, Sangli",
+    affiliation: "Maharashtra State Board of Secondary and Higher Secondary Education",
+    period: "2020 — 2021",
+    score: "82.60%",
+    location: "Sangli, India",
+    description:
+      "Completed secondary education with a focus on Science and Mathematics, building the foundational analytical skills that drive my engineering approach.",
+    coursework: [
+      "Mathematics",
+      "Science",
+      "English",
+      
+    ],
+    icon: <BookOpen className="w-6 h-6" />,
+    accent: "from-emerald-400/20 to-cyan-400/10",
+  },
+];
+
+const certifications = [
+  {
+    title: "Cyber Security and Privacy",
+    issuer: "NPTEL — IIT Madras",
+    period: "July 2025 – October 2025",
+    achievement: "Elite",
+    topics: ["Cryptography", "Authentication", "Privacy", "Network Security"],
+    icon: <ShieldCheck className="w-5 h-5" />,
+    accent: "from-violet-400/20 to-primary/10",
+  },
+  {
+    title: "Java (Basic)",
+    issuer: "HackerRank",
+    period: "July 2023",
+    achievement: null,
+    topics: [],
+    icon: <BadgeCheck className="w-5 h-5" />,
+    accent: "from-cyan-400/10 to-primary/10",
+  },
+  {
+    title: "CSS (Basic)",
+    issuer: "HackerRank",
+    period: "September 2023",
+    achievement: null,
+    topics: [],
+    icon: <BadgeCheck className="w-5 h-5" />,
+    accent: "from-emerald-400/10 to-cyan-400/10",
   },
 ];
 
@@ -126,8 +176,8 @@ export default function Education() {
           {[
             { label: "Diploma Score", value: "85.94%", icon: <Award className="w-5 h-5" /> },
             { label: "Current SGPA", value: "7.7", icon: <TrendingUp className="w-5 h-5" /> },
-            { label: "Years of Study", value: "5+", icon: <Calendar className="w-5 h-5" /> },
-            { label: "Specialization", value: "CS & BS", icon: <BookOpen className="w-5 h-5" /> },
+            { label: "SSC Score", value: "82.60%", icon: <BookOpen className="w-5 h-5" /> },
+            { label: "Specialization", value: "CS & BS", icon: <Calendar className="w-5 h-5" /> },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -154,7 +204,7 @@ export default function Education() {
 
       {/* Education timeline */}
       <section className="px-6 py-20">
-        <div className="max-w-5xl mx-auto space-y-8">
+        <div className="max-w-5xl mx-auto space-y-10">
           {education.map((item, i) => (
             <motion.div
               key={item.degree}
@@ -163,13 +213,13 @@ export default function Education() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.9, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              <SpotlightCard className="glass-panel rounded-3xl px-8 pt-5 pb-7 md:px-10 md:pt-6 md:pb-9 group hover:border-primary/40 relative overflow-hidden">
+              <SpotlightCard className="glass-panel rounded-3xl px-8  pb-7 md:px-10  hover:border-primary/40 relative overflow-hidden">
                 {/* Accent gradient blob */}
                 <div
-                  className={`absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-50 bg-gradient-to-br ${item.accent} pointer-events-none transition-opacity duration-700 group-hover:opacity-80`}
+                  className={`absolute -top-20 -right-20 w-72 h-10 rounded-full blur-3xl opacity-50 bg-gradient-to-br ${item.accent} pointer-events-none transition-opacity duration-700 group-hover:opacity-80`}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 relative">
+                <div className="grid grid-cols-1 md:grid-cols-12  relative">
                   {/* Left: icon + period */}
                   <div className="md:col-span-3 flex md:flex-col gap-4 md:gap-3">
                     <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-[0_0_30px_rgba(139,92,246,0)] group-hover:shadow-[0_0_30px_rgba(139,92,246,0.5)]">
@@ -241,6 +291,92 @@ export default function Education() {
               </SpotlightCard>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Certifications */}
+      <section className="px-6 pb-20">
+        <div className="max-w-5xl mx-auto">
+          {/* Section header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-4 mb-10"
+          >
+            <div className="h-px flex-1 bg-gradient-to-r from-border/60 to-transparent" />
+            <h2 className="text-2xl md:text-3xl font-display font-medium tracking-tight">
+              Certifications
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-l from-border/60 to-transparent" />
+          </motion.div>
+
+          {/* Cert cards grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {certifications.map((cert, i) => (
+              <motion.div
+                key={cert.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4 }}
+              >
+                <SpotlightCard className="glass-panel rounded-2xl p-6 group hover:border-primary/40 relative overflow-hidden h-full flex flex-col">
+                  {/* Accent blob */}
+                  <div
+                    className={`absolute -top-16 -right-16 w-48 rounded-full blur-3xl opacity-40 bg-gradient-to-br ${cert.accent} pointer-events-none transition-opacity duration-700 group-hover:opacity-70`}
+                  />
+
+                  {/* Icon + achievement badge row */}
+                  <div className="flex items-start justify-between mb-4 relative">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110 transition-all duration-500 shadow-[0_0_20px_rgba(139,92,246,0)] group-hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]">
+                      {cert.icon}
+                    </div>
+                    {cert.achievement && (
+                      <span className="px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-medium font-mono">
+                        {cert.achievement}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title & issuer */}
+                  <div className="relative flex-1">
+                    <h3 className="text-lg font-display font-medium tracking-tight mb-1 group-hover:text-primary transition-colors duration-300">
+                      {cert.title}
+                    </h3>
+                    <div className="text-sm text-primary/80 font-medium mb-3">
+                      {cert.issuer}
+                    </div>
+
+                    {/* Period */}
+                    <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
+                      <Calendar className="w-3 h-3" />
+                      {cert.period}
+                    </div>
+
+                    {/* Topics chips (NPTEL only) */}
+                    {cert.topics.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-1">
+                        {cert.topics.map((topic) => (
+                          <span
+                            key={topic}
+                            className="px-2.5 py-1 text-xs rounded-full border border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                          >
+                            {topic}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bottom shimmer */}
+                  <div className="mt-5 h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
+                </SpotlightCard>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

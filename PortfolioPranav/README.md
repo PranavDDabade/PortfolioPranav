@@ -1,60 +1,58 @@
-# 🚀 Pranav Dabade - Portfolio Website
+# Pranav Dabade — Portfolio
 
-A modern, responsive portfolio website built to showcase my projects, skills, and journey as a developer. Designed with a clean UI, smooth interactions, and a focus on user experience.
+Personal portfolio website for Pranav Dabade, a MERN Stack / Full Stack Developer. Built with React 18, TypeScript, and Vite.
+
 <p align="center">
-  <img src="./public/opengraph.jpg" alt="Portfolio Preview" width="900"/>
+  <img src="./public/opengraph.jpg" alt="Portfolio preview" width="900"/>
 </p>
----
-
-## 🌐 Live Preview
-
-🔗 https://portfolio-pranav-klgy.vercel.app/
 
 ---
 
-## ✨ Features
+## 🌐 Live
 
-* 🎨 Modern UI Design – Clean and minimal interface
-* 📱 Fully Responsive – Works seamlessly on all devices
-* ⚡ Fast Performance – Optimized for speed and efficiency
-* 🧭 Smooth Navigation – User-friendly layout and scrolling
-* 📂 Project Showcase – Highlighting my best work
-* 📬 Contact Section – Easy way to connect
+**[https://portfolio-pranav-alpha.vercel.app/](https://portfolio-pranav-alpha.vercel.app/)**
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-
-* HTML5
-* CSS3
-* JavaScript
-* React (if used)
-
-**Styling:**
-
-* Tailwind CSS / Custom CSS
-
-**Tools & Deployment:**
-
-* Git & GitHub
-* Vercel
+| Layer | Technology |
+|---|---|
+| UI library | React 18 |
+| Language | TypeScript 5 |
+| Build tool | Vite 5 |
+| Styling | Tailwind CSS 4 |
+| Animations | Framer Motion 11 |
+| Routing | Wouter 3 |
+| Icons | Lucide React |
+| UI primitives | Radix UI (Toast, Tooltip) |
+| Data fetching | TanStack React Query 5 |
 
 ---
 
-## 📂 Project Structure
+## ✨ Features
 
-```bash
-PortfolioPranav/
-│── public/
-│── src/
-│   ├── components/
-│   ├── pages/
-│   ├── assets/
-│── package.json
-│── README.md
-```
+- Fully responsive — mobile, tablet, and desktop
+- Dark-mode-only design with ambient glow effects
+- Smooth scroll and Framer Motion page animations
+- Accessible — semantic landmarks, ARIA labels, reduced-motion support
+- Spotlight hover effect on cards
+- Circular animated resume download button
+- Contact form that opens the user's email client pre-filled
+- Separate `/education` page with certifications section
+- Deployed on Vercel with sitemap and OpenGraph tags
+
+---
+
+## 📂 Projects Showcased
+
+**CloudVault** — Cloud-based file sharing platform  
+React.js · Node.js · Express.js · MongoDB Atlas · AWS S3 · JWT  
+[Live](https://cloudvault-1-9w0z.onrender.com/)
+
+**HeartInsights** — Heart disease prediction app  
+React.js · Node.js · MongoDB · Python · Flask · scikit-learn  
+[Live](https://heartinsights.vercel.app) · [GitHub](https://github.com/PranavDDabade/heartinsights)
 
 ---
 
@@ -62,73 +60,62 @@ PortfolioPranav/
 
 ### Prerequisites
 
-* Node.js (v16 or higher)
-* npm
+- Node.js v18 or higher
+- npm
 
-### Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/PranavDDabade/PortfolioPranav.git
-cd PortfolioPranav
-```
-
-Install dependencies:
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-Run the project:
+### Start the development server
 
 ```bash
-npm start
+npm run dev
 ```
 
----
-
-## 📝 Customization
-
-You can easily customize this portfolio:
-
-* Update personal details in components
-* Add your projects in the project section
-* Modify styles and themes
-* Update contact information
+Open [http://localhost:5173](http://localhost:5173) in your browser. The server supports hot module replacement — changes reflect instantly without a full reload.
 
 ---
 
-## 📱 Sections Included
+## 📜 Available Scripts
 
-* Hero Section – Introduction and overview
-* About Section – Background and skills
-* Skills Section – Technical expertise
-* Projects Section – Work showcase
-* Contact Section – Get in touch
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Compile TypeScript and produce a production build in `dist/` |
+| `npm run preview` | Serve the production build locally for final checks |
 
 ---
 
-## 🔧 Build for Production
+## 📁 Project Structure
 
-```bash
-npm run build
 ```
-
----
-
-## 📌 Future Improvements
-
-* Add animations (Framer Motion)
-* Integrate backend for contact form
-* Add blog or articles section
-* Improve accessibility and SEO
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
+PortfolioPranav/
+├── public/
+│   ├── images/          # Hero background, profile, and project screenshots
+│   ├── Pranav_Dabade_Resume.pdf
+│   ├── favicon-v2.svg
+│   ├── sitemap.xml
+│   └── robots.txt
+└── src/
+    ├── components/
+    │   ├── NavLogo.tsx
+    │   └── SpotlightCard.tsx
+    ├── hooks/
+    │   ├── use-mobile.tsx
+    │   └── use-toast.ts
+    ├── lib/
+    │   └── utils.ts
+    ├── pages/
+    │   ├── home.tsx       # Main portfolio page
+    │   ├── education.tsx  # Education & certifications page
+    │   └── not-found.tsx  # 404 page
+    ├── App.tsx
+    ├── main.tsx
+    └── index.css
+```
 
 ---
 
@@ -136,13 +123,12 @@ This project is open-source and available under the MIT License.
 
 **Pranav Dabade**
 
-* GitHub: https://github.com/PranavDDabade
-* Portfolio: https://portfolio-pranav-klgy.vercel.app/
+- Email: [pranavddabade@gmail.com](mailto:pranavddabade@gmail.com)
+- GitHub: [github.com/PranavDDabade](https://github.com/PranavDDabade)
+- LinkedIn: [linkedin.com/in/pranav-dabade](https://www.linkedin.com/in/pranav-dabade)
 
 ---
 
-## ⭐ Support
+## 📄 License
 
-If you like this project, consider giving it a ⭐ on GitHub!
-
----
+This project is open-source and available under the [MIT License](LICENSE).
